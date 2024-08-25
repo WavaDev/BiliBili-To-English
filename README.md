@@ -1,6 +1,9 @@
 # BiliBili-To-English
 Translate BiliBili To English.
 
+## Features
+It starts by checking a file called dictionary.js to switch Chinese words to English. If it finds a word not in the file, it uses Google Translate for the translation. This whole process is quick, usually taking just 0.5 seconds to translate what's on your screen. Moreover, it can translate text even if you don't refresh the page.
+
 **Installation Instructions:**
 
 To install this Chrome extension, follow these steps:
