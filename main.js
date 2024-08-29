@@ -1,13 +1,9 @@
-// Cache for storing translated text for 10 minutes
 const translationCache = {};
 
-// Track ongoing translation requests to prevent duplicate requests
 const ongoingRequests = {};
 
-// Maximum length for a single translation request
-const MAX_TRANSLATION_LENGTH = 800; // Adjust as needed based on API limits
+const MAX_TRANSLATION_LENGTH = 800;
 
-// Function to replace text instantly
 function replaceText() {
     const textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
     let node;
@@ -16,36 +12,34 @@ function replaceText() {
         const parentElement = node.parentElement;
         let originalText = node.nodeValue.trim();
 
-        // Skip translation for the element with ID 'h-name'
         if (parentElement.id === 'h-name' || node.processed) continue;
 
         if (originalText !== '') {
             if (translationCache[originalText]) {
                 node.nodeValue = translationCache[originalText];
-                node.processed = true; // Mark node as processed
+                node.processed = true;
             } else if (!ongoingRequests[originalText]) {
                 let translatedText = dictionary[originalText.toLowerCase()];
 
                 if (translatedText) {
                     node.nodeValue = translatedText;
                     translationCache[originalText] = translatedText;
-                    node.processed = true; // Mark node as processed
+                    node.processed = true;
                     setTimeout(() => {
                         delete translationCache[originalText];
-                    }, 600000); // Clear cache after 10 minutes (10 mins = 600000 ms)
+                    }, 600000);
                 } else {
-                    ongoingRequests[originalText] = true; // Mark as ongoing request
+                    ongoingRequests[originalText] = true;
                     translateText(node, originalText);
                 }
             }
         }
     }
-
-    // Translate placeholders for input and textarea elements
+    
     const inputElements = document.querySelectorAll('input[placeholder], textarea[placeholder]');
     inputElements.forEach(element => {
-        if (element.dataset.processed) return; // Skip if already processed
-
+        if (element.dataset.processed) return;
+        
         const originalPlaceholder = element.placeholder.trim();
 
         if (originalPlaceholder !== '') {
@@ -58,19 +52,18 @@ function replaceText() {
                 if (translatedPlaceholder) {
                     element.placeholder = translatedPlaceholder;
                     translationCache[originalPlaceholder] = translatedPlaceholder;
-                    element.dataset.processed = true; // Mark element as processed
+                    element.dataset.processed = true;
                     setTimeout(() => {
                         delete translationCache[originalPlaceholder];
-                    }, 600000); // Clear cache after 10 minutes (10 mins = 600000 ms)
+                    }, 600000);
                 } else {
-                    ongoingRequests[originalPlaceholder] = true; // Mark as ongoing request
+                    ongoingRequests[originalPlaceholder] = true;
                     translatePlaceholderText(element, originalPlaceholder);
                 }
             }
         }
     });
 
-    // Explicitly translate text inside <p> with id "contents" and any child <span>
     const contentsElement = document.getElementById('contents');
     if (contentsElement) {
         const spanElements = contentsElement.querySelectorAll('span');
@@ -80,16 +73,15 @@ function replaceText() {
             if (originalSpanText !== '' && !span.dataset.processed) {
                 if (translationCache[originalSpanText]) {
                     span.textContent = translationCache[originalSpanText];
-                    span.dataset.processed = true; // Mark span as processed
+                    span.dataset.processed = true;
                 } else if (!ongoingRequests[originalSpanText]) {
-                    ongoingRequests[originalSpanText] = true; // Mark as ongoing request
+                    ongoingRequests[originalSpanText] = true;
                     translateText(span, originalSpanText);
                 }
             }
         });
     }
 
-    // Explicitly translate text inside div with id "comment"
     const commentElement = document.getElementById('comment');
     if (commentElement) {
         const commentTextNodes = document.createTreeWalker(commentElement, NodeFilter.SHOW_TEXT, null, false);
@@ -101,9 +93,9 @@ function replaceText() {
             if (commentOriginalText !== '' && !commentNode.processed) {
                 if (translationCache[commentOriginalText]) {
                     commentNode.nodeValue = translationCache[commentOriginalText];
-                    commentNode.processed = true; // Mark node as processed
+                    commentNode.processed = true;
                 } else if (!ongoingRequests[commentOriginalText]) {
-                    ongoingRequests[commentOriginalText] = true; // Mark as ongoing request
+                    ongoingRequests[commentOriginalText] = true;
                     translateText(commentNode, commentOriginalText);
                 }
             }
@@ -111,7 +103,6 @@ function replaceText() {
     }
 }
 
-// Function to check if a text node is in the viewport
 function isTextNodeInViewport(node) {
     const rect = node.parentElement.getBoundingClientRect();
     return (
@@ -122,7 +113,6 @@ function isTextNodeInViewport(node) {
     );
 }
 
-// Function to translate text to English using Google Translate
 async function translateText(node, text) {
     try {
         const chunks = splitTextIntoChunks(text, MAX_TRANSLATION_LENGTH);
@@ -140,22 +130,21 @@ async function translateText(node, text) {
         const translatedText = translatedChunks.join(' ');
         node.nodeValue = translatedText;
         translationCache[text] = translatedText;
-        node.processed = true; // Mark node as processed
+        node.processed = true;
 
         setTimeout(() => {
             delete translationCache[text];
-        }, 600000); // Clear cache after 10 minutes (10 mins = 600000 ms)
+        }, 600000);
 
-        delete ongoingRequests[text]; // Remove from ongoing requests
+        delete ongoingRequests[text];
     } catch (error) {
         console.error("Translation error:", error);
         setTimeout(() => {
-            delete ongoingRequests[text]; // Retry translation after 0.5 seconds if failed
+            delete ongoingRequests[text];
         }, 500);
     }
 }
 
-// Function to translate placeholder text to English using Google Translate
 async function translatePlaceholderText(element, text) {
     try {
         const chunks = splitTextIntoChunks(text, MAX_TRANSLATION_LENGTH);
@@ -173,22 +162,21 @@ async function translatePlaceholderText(element, text) {
         const translatedPlaceholder = translatedChunks.join(' ');
         element.placeholder = translatedPlaceholder;
         translationCache[text] = translatedPlaceholder;
-        element.dataset.processed = true; // Mark element as processed
+        element.dataset.processed = true;
 
         setTimeout(() => {
             delete translationCache[text];
-        }, 600000); // Clear cache after 10 minutes (10 mins = 600000 ms)
+        }, 600000);
 
-        delete ongoingRequests[text]; // Remove from ongoing requests
+        delete ongoingRequests[text];
     } catch (error) {
         console.error("Translation error:", error);
         setTimeout(() => {
-            delete ongoingRequests[text]; // Retry translation after 0.5 seconds if failed
+            delete ongoingRequests[text];
         }, 500);
     }
 }
 
-// Function to split text into smaller chunks to avoid request blocking
 function splitTextIntoChunks(text, maxLength) {
     const chunks = [];
     let currentChunk = '';
@@ -209,15 +197,12 @@ function splitTextIntoChunks(text, maxLength) {
     return chunks;
 }
 
-// Initial dictionary update and text replacement on page load
 async function initialize() {
-    replaceText(); // Start replacing text
+    replaceText();
 }
 
-// Periodically check for updates and replace text
 setInterval(function() {
     replaceText();
-}, 500); // Check every 0.5 seconds for updates
+}, 500);
 
-// Initialize the script
 initialize();
