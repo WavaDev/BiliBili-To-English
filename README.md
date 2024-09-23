@@ -5,7 +5,7 @@ BiliBili is a video platform that only has a Chinese version. To translate its c
 ![image](https://github.com/user-attachments/assets/594ffde2-3be6-4e05-8a40-51bc9b1cbf54)
 
 
-## Features
+## How it works
 It starts by checking a file called dictionary.js to switch Chinese words to English. If it finds a word/sentence not in the file, it uses Google Translate for the translation. This whole process is quick, usually taking just 0.5 seconds to translate what's on your screen. Moreover, it can translate text even if you don't refresh the page.
 
 **Installation Instructions:**
