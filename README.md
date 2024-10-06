@@ -15,7 +15,7 @@ BiliBili is a video platform that only has a Chinese version. To translate its c
 ## How it works
 It starts by checking a file called dictionary.js to switch Chinese words to English. If it finds a word/sentence not in the file, it uses Google Translate for the translation. This whole process is quick, usually taking just 0.5 seconds to translate what's on your screen. Moreover, it can translate text even if you don't refresh the page.
 
-**Installation Instructions:**
+## Installation Instructions:
 
 To install this Chrome extension, follow these steps:
 1. Download this repository as a ZIP file and extract it.
