@@ -1,6 +1,13 @@
 # BiliBili-To-English
 BiliBili is a video platform that only has a Chinese version. To translate its content into English, you can use a Chrome extension. This extension works on browsers like Chrome, Bing, Brave, Opera, and many more.
 
+# Features
+
+- Real-time translation of captions
+- Comprehensive translation for the entire page, including buttons and menus
+- Real-time translation of comments on manga.bilibili.com (note: does not function on bilibili.com)
+- Instant translation of video titles, views, and likes
+
 ### Screenshot:
 ![image](https://github.com/user-attachments/assets/594ffde2-3be6-4e05-8a40-51bc9b1cbf54)
 
