@@ -25,5 +25,5 @@ To install this Chrome extension, follow these steps:
 5. You can click the refresh icon optionally (recommended but not mandatory).
 6. Turn off "Developer mode" once the installation is complete.
 
-Made By WavaDev,
+Made By **WavaDev**,
 and the `dictionary.js` file was taken from [XilkyTofu](https://github.com/XilkyTofu/bilibili_translate_chrome_extension).
